@@ -1,0 +1,26 @@
+{
+  "questions": [
+  {
+    "Question": "Which annotation is used to create a REST controller in Spring Boot?",
+    "Options": [
+      "@Controller",
+      "@RestController",
+      "@Service",
+      "@Repository"
+    ],
+    "Answer": 2,
+    "Explanation": "Handles web requests"
+  },
+  {
+    "Question": "In Spring MVC, which component is responsible for mapping HTTP requests to handler methods?",
+    "Options": [
+      "Controller",
+      "View",
+      "Model",
+      "DispatcherServlet"
+    ],
+    "Answer": 4,
+    "Explanation": "Routes requests"
+  }
+]
+}
