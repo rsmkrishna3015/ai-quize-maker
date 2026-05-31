@@ -3,9 +3,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 export const fetchQuestions = createAsyncThunk(
     'quizze/fetchQuestions',
-    async (_, { rejectWithValue }) => {
+    async (topic, { rejectWithValue }) => {
         try {
-            const response = await fetch('/quizer') /*fetch('http://127.0.0.1:8000/quizer') fetch('http://localhost:5000/questions') */
+            const response = await fetch('http://127.0.0.1:8000/quizer',{
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify({ topic: topic})
+            }) /*fetch('http://127.0.0.1:8000/quizer') fetch('http://localhost:5000/questions') */
             if (!response.ok) {
                 throw new Error('Failed to fetch questions')
             }
@@ -18,6 +24,7 @@ export const fetchQuestions = createAsyncThunk(
 )
 
 const initialState = {
+    topic:'',
     questionIndex: 0,
     selectedAnswers: {},
     questions: [],
@@ -31,6 +38,9 @@ const quizzeSlice = createSlice({
     name:"quizze",
     initialState:initialState,
     reducers:{
+        setTopic(state, action){
+            state.topic = action.payload;
+        },
         nextQuestion(state, action){
             state.questionIndex = state.questionIndex + action.payload;
             state.isQuestionAnswered = false;
@@ -67,6 +77,6 @@ const quizzeSlice = createSlice({
     }
 })
 
-export const { nextQuestion, prevQuestion, selectedAnswer, submitQuiz, reset } = quizzeSlice.actions
+export const { setTopic, nextQuestion, prevQuestion, selectedAnswer, submitQuiz, reset } = quizzeSlice.actions
 
 export default quizzeSlice.reducer

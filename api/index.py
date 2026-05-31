@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from openai import OpenAI, AsyncOpenAI
 from agents import Agent, OpenAIChatCompletionsModel, Runner, trace, input_guardrail, GuardrailFunctionOutput, function_tool
 from openai.types.responses import ResponseTextDeltaEvent
+from pydantic import BaseModel
 import asyncio
 import re
 from typing import List
@@ -15,6 +16,9 @@ load_dotenv(override=True)
 groq_api_key = os.getenv('GROQ_API_KEY')
 
 app = FastAPI()
+
+class QuizRequest(BaseModel):
+    topic: str
 
 # Configure CORS
 app.add_middleware(
@@ -36,8 +40,9 @@ async def root():
 async def question():
     return {"message": "question route"}
 
-@app.get("/quizer")
-async def quizer() :
+@app.post("/quizer")
+async def quizer(request: QuizRequest) :
+    userTopic = request.topic
 
     managerinstuction = """
     You are a manager agent.
@@ -98,7 +103,7 @@ async def quizer() :
 
     managerAgent = Agent(name="managerAgent", instructions=managerinstuction, model=groq_model, tools=[subTopicProviderTool, topicSelectorTool], handoffs=[questionAgent])
 
-    result = await Runner.run(managerAgent, "Generate for chemistry")
+    result = await Runner.run(managerAgent, f'Generate for {userTopic}')
 
     cleaned = re.sub(
         r"<think>.*?</think>",
