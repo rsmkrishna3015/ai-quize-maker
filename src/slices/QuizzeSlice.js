@@ -5,7 +5,7 @@ export const fetchQuestions = createAsyncThunk(
     'quizze/fetchQuestions',
     async (topic, { rejectWithValue }) => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/quizer',{
+            const response = await fetch('/quizer',{
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
